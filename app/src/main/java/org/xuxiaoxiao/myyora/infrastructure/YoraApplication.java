@@ -1,26 +1,35 @@
 package org.xuxiaoxiao.myyora.infrastructure;
 
+import android.app.Application;
+import android.util.Log;
+
 /**
  * Created by WuQiang on 2017/1/5.
- * <p>
- * 这个类，是可以写成 Singleton 的形式的 。
+ *
+ * 这个类，是可以写成 Singleton 的形式的 。 
+ * 这是一个在整个APP运行期间都会存在的类，
+ * 所以可以保存一些信息，比如：用户是否登陆
+ * 这是整个程序的起点，比第一个 Activity 都要早
+ *
  */
 
-public class YoraApplication {
+public class YoraApplication extends Application { // 继承自 Application ， 才能在 BaseActivity 当中 强制转换
     private Auth _auth;
-    private static YoraApplication application = null;
 
-    public static YoraApplication getYoraApplication() {
-        if (application == null) {
-            application = new YoraApplication();
-        }
-        return application;
+// It's also correct; but because object has not been completely initiallized at this point,
+// it may cause problem in Auth.
+//    public YoraApplication() {
+//        _auth = new Auth(this);
+//    }
+
+    @Override
+    public void onCreate() {
+        Log.e("YoraApplication","YoraApplication");
+        super.onCreate();
+        // 给 Auth 传入的是 Application 级的 Context
+        // 而不是 Activity 级的
+        _auth = new Auth(this);
     }
-
-    private YoraApplication() {
-        this._auth = new Auth();
-    }
-
 
     public Auth getAuth() {
         return _auth;
