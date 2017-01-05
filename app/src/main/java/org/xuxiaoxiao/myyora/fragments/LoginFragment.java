@@ -31,7 +31,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     }
 
     @Override
-    //import android.app.Fragment;  // 调用这个版本 onAttach 不执行
+    //import android.app.Fragment;  // 调用这个版本 onAttach 不执行，可能是25就不行了
     public void onAttach(Context context) {
         Log.e("LoginFragment","onAttach");
         super.onAttach(context);
