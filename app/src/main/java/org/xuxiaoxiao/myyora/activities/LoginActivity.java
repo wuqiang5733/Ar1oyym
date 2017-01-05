@@ -2,11 +2,11 @@ package org.xuxiaoxiao.myyora.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
 import org.xuxiaoxiao.myyora.R;
+import org.xuxiaoxiao.myyora.fragments.LoginFragment;
 
 /*
 E/YoraApplication: YoraApplication
@@ -24,23 +24,45 @@ E/MainActivity: MainActivity
  */
 
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, LoginFragment.Callbacks {
+    private static final int REQUEST_NARROW_LOGIN = 1;
+    private View _loginButton;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         Log.e("LoginActivity","LoginActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final Intent intent = new Intent(this,MainActivity.class);
+        _loginButton = findViewById(R.id.activity_login_login);
+        if (_loginButton != null) {
+            _loginButton.setOnClickListener(this);
+        }
+    }
 
-        findViewById(R.id.activity_login_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("LoginActivity","你登陆了 。。。 ");
-                application.getAuth().getUser().setLoggedIn(true);
-                startActivity(intent);
-                finish();
-            }
-        });
+    @Override
+    public void onClick(View view) {
+        if (view == _loginButton) {
+            startActivityForResult(new Intent(this, LoginNarrowActivity.class), REQUEST_NARROW_LOGIN);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != RESULT_OK)
+            return;
+
+        if (requestCode == REQUEST_NARROW_LOGIN)
+            finishLogin();
+    }
+
+    private void finishLogin() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
+    @Override
+    public void onLoggedIn() {
+        finishLogin();
     }
 }
