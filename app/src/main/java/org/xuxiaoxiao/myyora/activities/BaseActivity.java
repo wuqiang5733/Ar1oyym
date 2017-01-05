@@ -16,6 +16,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.application = (YoraApplication) getApplication();
+        this.application = YoraApplication.getYoraApplication();
     }
 }

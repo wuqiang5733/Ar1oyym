@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.xuxiaoxiao.myyora">
 
+
+    <!--android:name=".infrastructure.YoraApplication"-->
+
     <application
-        android:name=".infrastructure.YoraApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
