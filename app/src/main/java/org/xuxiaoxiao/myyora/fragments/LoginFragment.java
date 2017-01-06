@@ -2,7 +2,6 @@ package org.xuxiaoxiao.myyora.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import org.xuxiaoxiao.myyora.R;
 
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
+    // 从主界面（四个启动项的那个界面）的第一个启动项启动的那个 Fragment，不包括界面的头部
     private View _loginButton;
     private Callbacks _callbacks;
 
@@ -33,10 +33,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     @Override
     //import android.app.Fragment;  // 调用这个版本 onAttach 不执行，可能是25就不行了
     public void onAttach(Context context) {
-        Log.e("LoginFragment","onAttach");
         super.onAttach(context);
         _callbacks = (Callbacks) getActivity();
-        Log.e("Test","_callbacks.toString()");
     }
 
     @Override

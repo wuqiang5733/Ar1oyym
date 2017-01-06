@@ -9,6 +9,7 @@ import org.xuxiaoxiao.myyora.R;
 
 
 public class ExternalLoginActivity extends BaseActivity implements View.OnClickListener {
+    // Facebook 跟 Google 登陆
     public static final String EXTRA_EXTERNAL_SERVICE = "EXTRA_EXTERNAL_SERVICE";
 
     private Button _testButton;
