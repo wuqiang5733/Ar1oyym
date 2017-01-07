@@ -1,11 +1,13 @@
 package org.xuxiaoxiao.myyora.activities;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import org.xuxiaoxiao.myyora.R;
 import org.xuxiaoxiao.myyora.infrastructure.YoraApplication;
@@ -39,10 +41,47 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (toolbar != null)
             setSupportActionBar(toolbar);
     }
+    public void fadeOut(final FadeOutListener listener){
+        // 告诉 NavDrawer 采用新的 Animation
+        View rootView = findViewById(android.R.id.content);
+        rootView.animate()
+                .alpha(0)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        listener.onFadeOutEnd();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .setDuration(300)
+                .start();
+    }
 
     protected void setNavDrawer(NavDrawer navDrawer) {
         this.navDrawer = navDrawer;
         this.navDrawer.create();
+        // 让 NavDrawer 不要用旧的 Animation
+        overridePendingTransition(0, 0);
+        View rootView = findViewById(android.R.id.content);
+        rootView.setAlpha(0);
+        rootView.animate()
+                .alpha(1)
+                .setDuration(350)
+                .start();
     }
     public Toolbar getToolbar(){
 // 为了能在 NavDrawer 当中访问
@@ -51,6 +90,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public YoraApplication getYoraApplication() {
         return application;
+    }
+    public interface FadeOutListener {
+        void onFadeOutEnd();
     }
 }
 // 我们想让Toobar在BaseActivity当中建立，可以在其它地方引用，我们只想在BaseActivity当中有一个

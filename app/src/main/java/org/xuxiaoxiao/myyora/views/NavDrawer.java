@@ -192,16 +192,24 @@ public class NavDrawer {
         @Override
         public void onClick(View v) {
             navDrawer.setOpen(false);
-
-            if (this.navDrawer.activity.getClass() == targetActivity) return;
-            super.onClick(v);
-
             final BaseActivity activity = navDrawer.activity;
 
+            if (activity.getClass() == targetActivity)
+                return;
 
-                    activity.startActivity(new Intent(activity,targetActivity));
+            super.onClick(v);
+
+            /*activity.startActivity(new Intent(activity, _targetActivity));
+            activity.overridePendingTransition(R.anim.enter_from_right, R.anim.exit_out_left);
+            activity.finish();*/
+
+            activity.fadeOut(new BaseActivity.FadeOutListener() {
+                @Override
+                public void onFadeOutEnd() {
+                    activity.startActivity(new Intent(activity, targetActivity));
                     activity.finish();
-
+                }
+            });
         }
     }
 }
