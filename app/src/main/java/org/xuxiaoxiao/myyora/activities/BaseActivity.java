@@ -48,6 +48,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 // 为了能在 NavDrawer 当中访问
         return toolbar;
     }
+
+    public YoraApplication getYoraApplication() {
+        return application;
+    }
 }
 // 我们想让Toobar在BaseActivity当中建立，可以在其它地方引用，我们只想在BaseActivity当中有一个
 //findViewById，而不是到处都这么做，如何才做到？
