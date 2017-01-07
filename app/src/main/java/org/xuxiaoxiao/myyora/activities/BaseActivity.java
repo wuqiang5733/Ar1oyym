@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
@@ -21,6 +22,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected YoraApplication application;
     protected Toolbar toolbar;
     protected NavDrawer navDrawer;
+    protected boolean isTablet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,6 +31,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.e("BaseActivity","BaseActivity");
         super.onCreate(savedInstanceState);
         this.application = (YoraApplication) getApplication();
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        isTablet = (metrics.widthPixels / metrics.density) >= 600;
     }
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -92,6 +97,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return application;
     }
     public interface FadeOutListener {
+        // NavDrawer Animation
         void onFadeOutEnd();
     }
 }
