@@ -72,14 +72,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:hint="Display Name"
+                    android:hint="@string/ProfileDisplayName"
                     android:maxLines="1" />
 
                 <EditText
                     android:id="@+id/activity_profile_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/ProfileEmail"
                     android:inputType="textEmailAddress"
                     android:maxLines="1" />
 

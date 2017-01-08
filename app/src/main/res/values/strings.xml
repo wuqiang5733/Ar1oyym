@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Yora</string>
     <string name="ChooserAvatar">Chooser Avatar</string>
+    <string name="ProfileDisplayName">DisplayName</string>
+    <string name="ProfileEmail">Email</string>
+    <string name="ActivityProfile">Profile</string>
+
 </resources>

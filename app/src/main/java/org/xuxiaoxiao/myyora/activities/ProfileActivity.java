@@ -28,7 +28,7 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
     @Override
     protected void onYoraCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_profile);
-        getSupportActionBar().setTitle("Profile");
+        getSupportActionBar().setTitle(getString(R.string.ActivityProfile));
         setNavDrawer(new MainNavDrawer(this));
 
         if (!isTablet) { // Video37_22min
@@ -94,6 +94,8 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 这一段代码必须有读取外部存储的权限
+
         if (resultCode != RESULT_OK) {
             _tempOutputFile.delete();
             return;
