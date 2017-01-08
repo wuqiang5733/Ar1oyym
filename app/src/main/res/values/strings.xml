@@ -11,5 +11,14 @@
     <string name="ProfileTapToChange">Tap to change</string>
     <string name="LotoutTip">You have logged out!</string>
 
+    <string name="ChangePasswordDialogUpdate">Update</string>
+    <string name="ChangePasswordDialogCancel">Cancel</string>
+    <string name="ChangePasswordDialogChangePassword">Change Password</string>
+
+    <string name="ChangePasswordDialogCurrent_password">current password</string>
+    <string name="ChangePasswordDialogNew_password">New Password</string>
+    <string name="ChangePasswordDialogConfirm_new_password">Confirm New Password</string>
+    <string name="ChangePasswordDialogPasswordUpdated">Password Updated!</string>
+
 
 </resources>

@@ -11,4 +11,15 @@
     <string name="ProfileTapToChange">点击换头像</string>
     <string name="LotoutTip">你已经退出了</string>
 
+    <string name="ChangePasswordDialogUpdate">更新</string>
+    <string name="ChangePasswordDialogCancel">取消</string>
+    <string name="ChangePasswordDialogChangePassword">更改密码</string>
+
+
+    <string name="ChangePasswordDialogCurrent_password">当前密码</string>
+    <string name="ChangePasswordDialogNew_password">新密码</string>
+    <string name="ChangePasswordDialogConfirm_new_password">确认新密码</string>
+    <string name="ChangePasswordDialogPasswordUpdated">密码已经更新</string>
+
+
 </resources>

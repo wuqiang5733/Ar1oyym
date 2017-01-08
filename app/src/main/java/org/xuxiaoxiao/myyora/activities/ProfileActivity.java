@@ -1,5 +1,6 @@
 package org.xuxiaoxiao.myyora.activities;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.widget.RelativeLayout;
 import com.soundcloud.android.crop.Crop;
 
 import org.xuxiaoxiao.myyora.R;
+import org.xuxiaoxiao.myyora.dialogs.ChangePasswordDialog;
 import org.xuxiaoxiao.myyora.infrastructure.User;
 import org.xuxiaoxiao.myyora.views.MainNavDrawer;
 
@@ -189,6 +191,13 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
         int itemId = item.getItemId();
         if (itemId == R.id.activity_profile_menuEdit) {
             changeState(STATE_EDITING);
+            return true;
+        }else if (itemId == R.id.activity_profile_menuChangePassword) {
+            FragmentTransaction transaction = getFragmentManager()
+                    .beginTransaction()
+                    .addToBackStack(null); // When we hit back key the transaction will be undone
+            ChangePasswordDialog dialog = new ChangePasswordDialog();
+            dialog.show(transaction, null);
             return true;
         }
 
