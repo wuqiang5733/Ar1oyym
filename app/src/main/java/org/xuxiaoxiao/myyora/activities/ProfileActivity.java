@@ -6,13 +6,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.soundcloud.android.crop.Crop;
 
 import org.xuxiaoxiao.myyora.R;
+import org.xuxiaoxiao.myyora.infrastructure.User;
 import org.xuxiaoxiao.myyora.views.MainNavDrawer;
 
 import java.io.File;
@@ -20,10 +25,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileActivity extends BaseAuthenticatedActivity implements View.OnClickListener {
-    private static final int REQUEST_SELECT_IMAGE = 100;
-    private ImageView _avatarView;
-    private View _avatarProgressFrame;
-    private File _tempOutputFile;
+    private static final int REQUEST_SELECT_IMAGE = 100;// 编辑头像时，选择器（选择照相机与相册）的请求码
+
+    private static final int STATE_VIEWING = 1;
+    private static final int STATE_EDITING = 2;
+
+    private static final String BUNDLE_STATE = "BUNDLE_STATE"; // onSaveInstanceState当中要用的 Key
+
+    private int _currentState;//切换 查看 与 编辑  模式 要用
+    private EditText _displayNameText;//显示名 跟 邮件
+    private EditText _emailText;
+    private ActionMode _editProfileActionMode;
+
+    private ImageView _avatarView; // 头像跟头像下面的文字
+    private View _changeAvatarButton;
+
+
+    private View _avatarProgressFrame; // 头像上转的那个圈
+    private File _tempOutputFile; // 编辑头像时用的临时文件
 
     @Override
     protected void onYoraCreate(Bundle savedInstanceState) {
@@ -41,14 +60,46 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
             textFields.setLayoutParams(params);
         }
 
-        _avatarView = (ImageView) findViewById(R.id.activity_profile_avatar);
+        _avatarView = (ImageView) findViewById(R.id.activity_profile_avatar);// 头像跟头像下面的文字
+        _changeAvatarButton = findViewById(R.id.activity_profile_changeAvatar);
+
         _avatarProgressFrame = findViewById(R.id.activity_profile_avatarProgressFrame);
+
+        _displayNameText = (EditText) findViewById(R.id.activity_profile_displayName);//显示名跟邮件
+        _emailText = (EditText) findViewById(R.id.activity_profile_email);
+
         _tempOutputFile = new File(getExternalCacheDir(), "temp_image.jpg");
         // 点击头像或者头像下面的文字都会生成事件
         _avatarView.setOnClickListener(this);
-        findViewById(R.id.activity_profile_changeAvatar).setOnClickListener(this);
+        _changeAvatarButton.setOnClickListener(this);
         // 没有下面这一句，是不能点击的，它会不停的转
         _avatarProgressFrame.setVisibility(View.GONE);
+
+        User user = application.getAuth().getUser();
+        // 从 User 类当中提取文字，然后在当前Activity上的ToolBar上显示
+        // 在 MainNavDrawer 上面也有显示
+        // 这个文字可以在 LoginFragment 当中的 onClick 当中设置
+        getSupportActionBar().setTitle(user.getDisplayName());
+
+        if (savedInstanceState == null) {
+            _displayNameText.setText(user.getDisplayName());//在_displayNameText跟 邮箱名 上也显示用户名
+            _emailText.setText(user.getEmail());
+            changeState(STATE_VIEWING);
+        } else {//旋转屏幕的时候，这个保存状态的方式很奇怪，但是很有效
+            changeState(savedInstanceState.getInt(BUNDLE_STATE));
+        }
+
+//
+//        _displayNameText.setText(user.getDisplayName());//在_displayNameText跟 邮箱名 上也显示用户名
+//        _emailText.setText(user.getEmail());
+//
+//        changeState(STATE_VIEWING); // 一进入这个界面的时候是不让编辑的
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUNDLE_STATE, _currentState);
     }
 
     @Override
@@ -59,6 +110,7 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
             changeAvatar();
         }
     }
+
     private void changeAvatar() {
         // Create a list of explicit intents to start activities which can perform ACTION_IMAGE_CAPTURE
         // ResolveInfo : Information that is returned from resolving an intent against an IntentFilter.
@@ -92,6 +144,7 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
         // Start chooser
         startActivityForResult(chooser, REQUEST_SELECT_IMAGE);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // 这一段代码必须有读取外部存储的权限
@@ -109,7 +162,8 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
                 outputFileUri = data.getData(); // If the user selected an image
             else
                 outputFileUri = tempFileUri; // User took a picture
-
+// 注意：要使用这个Crop 工具，得在manifest当中有这样的申明 ：
+// <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
             new Crop(outputFileUri)
                     .asSquare()
                     .output(tempFileUri)
@@ -120,4 +174,91 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
             _avatarView.setImageURI(tempFileUri);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // 创建笔形的那个编辑菜单
+        getMenuInflater().inflate(R.menu.activity_profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //点击 编辑  图标 的 CallBack
+
+        int itemId = item.getItemId();
+        if (itemId == R.id.activity_profile_menuEdit) {
+            changeState(STATE_EDITING);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void changeState(int state) {
+        if (state == _currentState)
+            return;
+
+        _currentState = state;
+        if (state == STATE_VIEWING) {
+            _displayNameText.setEnabled(false);
+            _emailText.setEnabled(false);
+            _changeAvatarButton.setVisibility(View.VISIBLE);
+
+            if (_editProfileActionMode != null) {
+                _editProfileActionMode.finish();
+                _editProfileActionMode = null;
+            }
+        } else if (state == STATE_EDITING) {
+            _displayNameText.setEnabled(true);
+            _emailText.setEnabled(true);
+            _changeAvatarButton.setVisibility(View.GONE);
+            //进入有箭头跟勾号的编辑界面
+            _editProfileActionMode = toolbar.startActionMode(new EditProfileActionCallback());
+            // 注意： import android.view.ActionMode;
+        } else
+            throw new IllegalArgumentException("Invalid state: " + state);
+
+    }
+
+    private class EditProfileActionCallback implements ActionMode.Callback {
+        // 注意在 style 当中要加入：<item name="windowActionModeOverlay">true</item>
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            getMenuInflater().inflate(R.menu.activity_profile_edit, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int itemId = item.getItemId();
+            if (itemId == R.id.activity_profile_edit_menuDone) {
+                // TODO Send request to update display name and email
+                User user = application.getAuth().getUser();
+                user.setDisplayName(_displayNameText.getText().toString());
+                user.setEmail(_emailText.getText().toString());
+                changeState(STATE_VIEWING);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            if (_currentState != STATE_VIEWING) { // When hitting cancel
+                User user = application.getAuth().getUser();
+                _displayNameText.setText(user.getDisplayName());
+                _emailText.setText(user.getEmail());
+                changeState(STATE_VIEWING);
+            }
+        }
+    }
+
 }
+

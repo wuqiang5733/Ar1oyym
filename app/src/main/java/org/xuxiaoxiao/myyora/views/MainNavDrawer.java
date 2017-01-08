@@ -24,14 +24,14 @@ public class MainNavDrawer extends NavDrawer {
 
     public MainNavDrawer(final BaseActivity activity) {
         super(activity);
-        addItem(new ActivityNavDrawerItem(MainActivity.class, "Inbox", null, R.drawable.ic_action_unread, R.id.include_main_nav_drawer_topItems));
-        addItem(new ActivityNavDrawerItem(SentMessagesActivity.class, "Sent Messages", null, R.drawable.ic_action_send_now, R.id.include_main_nav_drawer_topItems));
-        addItem(new ActivityNavDrawerItem(ContactsActivity.class, "Contacts", null, R.drawable.ic_action_group, R.id.include_main_nav_drawer_topItems));
-        addItem(new ActivityNavDrawerItem(ProfileActivity.class, "Profile", null, R.drawable.ic_action_person, R.id.include_main_nav_drawer_topItems));
-        addItem(new BasicNavDrawerItem("Logout", null, R.drawable.ic_action_backspace, R.id.include_main_nav_drawer_bottomItems) {
+        addItem(new ActivityNavDrawerItem(MainActivity.class, activity.getString(R.string.ActivityInbox).toString(), null, R.drawable.ic_action_unread, R.id.include_main_nav_drawer_topItems));
+        addItem(new ActivityNavDrawerItem(SentMessagesActivity.class, activity.getString(R.string.ActivitySentMessages).toString(), null, R.drawable.ic_action_send_now, R.id.include_main_nav_drawer_topItems));
+        addItem(new ActivityNavDrawerItem(ContactsActivity.class, activity.getString(R.string.ActivityContacts).toString(), null, R.drawable.ic_action_group, R.id.include_main_nav_drawer_topItems));
+        addItem(new ActivityNavDrawerItem(ProfileActivity.class, activity.getString(R.string.ActivityProfile).toString(), null, R.drawable.ic_action_person, R.id.include_main_nav_drawer_topItems));
+        addItem(new BasicNavDrawerItem(activity.getString(R.string.ActivityLogout).toString(), null, R.drawable.ic_action_backspace, R.id.include_main_nav_drawer_bottomItems) {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, "You have logged out!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, activity.getString(R.string.LotoutTip), Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -14,7 +14,7 @@ public class MainActivity extends BaseAuthenticatedActivity {
         Log.i("MainActivity","刚刚进入onYoraCreate，调用setContentView之前");
         setContentView(R.layout.activity_main);
         Log.i("MainActivity","onYoraCreate，执行完setContentView之后");
-        getSupportActionBar().setTitle("Inbox");
+        getSupportActionBar().setTitle(getString(R.string.ActivityInbox));
         setNavDrawer(new MainNavDrawer(this));
     }
 }

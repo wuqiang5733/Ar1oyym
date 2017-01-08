@@ -36,7 +36,7 @@
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
                 android:paddingTop="8dp"
-                android:text="Tap to change"
+                android:text="@string/ProfileTapToChange"
                 android:textColor="#fff" />
             <!--下面这个FrameLayout会覆盖上面头像与文字的部分，
             并且里面有一个旋转进度条(ProgressBar)，所有这些是不可见的-->

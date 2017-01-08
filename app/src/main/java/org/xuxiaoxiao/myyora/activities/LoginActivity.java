@@ -2,7 +2,6 @@ package org.xuxiaoxiao.myyora.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import org.xuxiaoxiao.myyora.R;
@@ -36,7 +35,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("LoginActivity", "LoginActivity");
+//        Log.e("LoginActivity", "LoginActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 

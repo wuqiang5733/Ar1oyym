@@ -3,6 +3,13 @@
     <string name="ChooserAvatar">Chooser Avatar</string>
     <string name="ProfileDisplayName">DisplayName</string>
     <string name="ProfileEmail">Email</string>
+    <string name="ActivityInbox">Inbox</string>
+    <string name="ActivitySentMessages">Sent Messages</string>
+    <string name="ActivityContacts">Contacts</string>
     <string name="ActivityProfile">Profile</string>
+    <string name="ActivityLogout">Logout</string>
+    <string name="ProfileTapToChange">Tap to change</string>
+    <string name="LotoutTip">You have logged out!</string>
+
 
 </resources>
