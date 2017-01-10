@@ -62,11 +62,12 @@ public class ChangePasswordDialog extends BaseDialogFragment implements View.OnC
     }
 
     @Subscribe
-    public void onPasswordChanged(Account.ChangeAvatarResponse response) {
-//        if (_progressDialog != null) {
-//            _progressDialog.dismiss();
-//            _progressDialog = null;
-//        }
+    public void onPasswordChanged(Account.ChangePasswordResponse response) {
+
+            _progressDialog.dismiss();
+            _progressDialog = null;
+
+
 
         if (response.didSucceed()) {
             Toast.makeText(getActivity(), "Password Updated!", Toast.LENGTH_SHORT).show();
@@ -74,10 +75,35 @@ public class ChangePasswordDialog extends BaseDialogFragment implements View.OnC
             application.getAuth().getUser().setHasPassword(true);
             return;
         }
+
+
+
+
         _currentPassword.setError(response.getPropertyError("currentPassword"));
         _newPassword.setError(response.getPropertyError("newPassword"));
         _confirmNewPassword.setError(response.getPropertyError("confirmNewPassword"));
+
         response.showErrorToast(getActivity());
 
     }
+//
+//    @Subscribe
+//    public void onPasswordChanged(Account.ChangePasswordResponse response) {
+//        if (_progressDialog != null) {
+//            _progressDialog.dismiss();
+//            _progressDialog = null;
+//        }
+//
+//        if (!response.didSucceed()) {
+//            response.showErrorToast(getActivity());
+//            _currentPassword.setError(response.getPropertyError("currentPassword"));
+//            _newPassword.setError(response.getPropertyError("newPassword"));
+//            _confirmNewPassword.setError(response.getPropertyError("confirmNewPassword"));
+//        }
+//        else {
+//            Toast.makeText(getActivity(), "Password Updated!", Toast.LENGTH_SHORT).show();
+//            dismiss();
+//            application.getAuth().getUser().setHasPassword(true);
+//        }
+//    }
 }

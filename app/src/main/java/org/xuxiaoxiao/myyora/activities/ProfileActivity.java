@@ -213,13 +213,13 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
     }
     @Subscribe // 更新_displayNameText与邮箱
     public void onProfileUpdated(Account.UpdateProfileResponse response) {
-        setProgressBarVisible(false);
         if (!response.didSucceed()) {
             response.showErrorToast(this);
             changeState(STATE_EDITING);
         }
         _displayNameText.setError(response.getPropertyError("displayName"));
         _emailText.setError(response.getPropertyError("email"));
+        setProgressBarVisible(false);
     }
 
     @Override

@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.squareup.otto.Bus;
 
+import org.xuxiaoxiao.myyora.services.Module;
+
 /**
  * Created by WuQiang on 2017/1/5.
  *
@@ -33,6 +35,7 @@ public class YoraApplication extends Application { // 继承自 Application ， 
         // 而不是 Activity 级的
         _auth = new Auth(this);
         _bus = new Bus();
+        Module.register(this);
     }
 
     public Auth getAuth() {
