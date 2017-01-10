@@ -3,6 +3,8 @@ package org.xuxiaoxiao.myyora.infrastructure;
 import android.app.Application;
 import android.util.Log;
 
+import com.squareup.otto.Bus;
+
 /**
  * Created by WuQiang on 2017/1/5.
  *
@@ -15,6 +17,7 @@ import android.util.Log;
 
 public class YoraApplication extends Application { // 继承自 Application ， 才能在 BaseActivity 当中 强制转换
     private Auth _auth;
+    private Bus _bus;
 
 // It's also correct; but because object has not been completely initiallized at this point,
 // it may cause problem in Auth.
@@ -29,9 +32,13 @@ public class YoraApplication extends Application { // 继承自 Application ， 
         // 给 Auth 传入的是 Application 级的 Context
         // 而不是 Activity 级的
         _auth = new Auth(this);
+        _bus = new Bus();
     }
 
     public Auth getAuth() {
         return _auth;
+    }
+    public Bus getBus() {
+        return _bus;
     }
 }

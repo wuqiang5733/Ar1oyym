@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
+import com.squareup.otto.Bus;
+
 import org.xuxiaoxiao.myyora.R;
 import org.xuxiaoxiao.myyora.infrastructure.YoraApplication;
 import org.xuxiaoxiao.myyora.views.NavDrawer;
@@ -23,6 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     protected NavDrawer navDrawer;
     protected boolean isTablet;
+    protected Bus bus;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,10 +34,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.e("BaseActivity","BaseActivity");
         super.onCreate(savedInstanceState);
         this.application = (YoraApplication) getApplication();
+        bus = application.getBus();
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         isTablet = (metrics.widthPixels / metrics.density) >= 600;
+
+        bus.register(this);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bus.unregister(this);
+    }
+
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
 //        @LayoutRes : Denotes that an integer parameter,

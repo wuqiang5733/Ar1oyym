@@ -1,6 +1,8 @@
 package org.xuxiaoxiao.myyora.activities;
 
+import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -16,10 +18,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.soundcloud.android.crop.Crop;
+import com.squareup.otto.Subscribe;
 
 import org.xuxiaoxiao.myyora.R;
 import org.xuxiaoxiao.myyora.dialogs.ChangePasswordDialog;
 import org.xuxiaoxiao.myyora.infrastructure.User;
+import org.xuxiaoxiao.myyora.services.Account;
 import org.xuxiaoxiao.myyora.views.MainNavDrawer;
 
 import java.io.File;
@@ -34,6 +38,9 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
 
     private static final String BUNDLE_STATE = "BUNDLE_STATE"; // onSaveInstanceState当中要用的 Key
 
+    private static boolean isProgressBarVisible; // 保护旋转现场：比如，正在更新Profile，ProgressBar是可见的
+    // 需要5秒，这时候旋转屏幕之后，isProgressBarVisible被设置成了 true ,这时候就需要恢复现场
+
     private int _currentState;//切换 查看 与 编辑  模式 要用
     private EditText _displayNameText;//显示名 跟 邮件
     private EditText _emailText;
@@ -45,6 +52,8 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
 
     private View _avatarProgressFrame; // 头像上转的那个圈
     private File _tempOutputFile; // 编辑头像时用的临时文件
+
+    private Dialog _progressDialog;
 
     @Override
     protected void onYoraCreate(Bundle savedInstanceState) {
@@ -91,11 +100,26 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
             changeState(savedInstanceState.getInt(BUNDLE_STATE));
         }
 
+        if (isProgressBarVisible) setProgressBarVisible(true);
+
 //
 //        _displayNameText.setText(user.getDisplayName());//在_displayNameText跟 邮箱名 上也显示用户名
 //        _emailText.setText(user.getEmail());
 //
 //        changeState(STATE_VIEWING); // 一进入这个界面的时候是不让编辑的
+    }
+    private void setProgressBarVisible(boolean visible) {
+        if (visible) {
+            _progressDialog = new ProgressDialog.Builder(this)
+                    .setTitle("更新资料")
+//                    .setTitle("Updating Profile")
+                    .setCancelable(false)
+                    .show();
+        } else if (_progressDialog != null) {
+            _progressDialog.dismiss();
+            _progressDialog = null;
+        }
+        isProgressBarVisible = visible;
     }
 
     @Override
@@ -171,10 +195,31 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
                     .output(tempFileUri)
                     .start(this);
         } else if (requestCode == Crop.REQUEST_CROP) {
+            _avatarProgressFrame.setVisibility(View.VISIBLE);
+            bus.post(new Account.ChangeAvatarRequest(tempFileUri));
             // TODO: Send tempFileUri to server as new avatar
-            _avatarView.setImageResource(0); // Force ImageView to refresh image despite its Uri not changed
-            _avatarView.setImageURI(tempFileUri);
+//            _avatarView.setImageResource(0); // Force ImageView to refresh image despite its Uri not changed
+//            _avatarView.setImageURI(tempFileUri);
         }
+    }
+
+    @Subscribe  // 更新头像
+    public void onAvatarUpdated(Account.ChangeAvatarResponse response){
+        _avatarProgressFrame.setVisibility(View.GONE);//头像上转的那个圈
+        if (!response.didSucceed())
+            response.showErrorToast(this);
+//        _avatarView.setImageResource(0); // Force ImageView to refresh image despite its Uri not changed
+//        _avatarView.setImageURI(Uri.fromFile(_tempOutputFile));
+    }
+    @Subscribe // 更新_displayNameText与邮箱
+    public void onProfileUpdated(Account.UpdateProfileResponse response) {
+        setProgressBarVisible(false);
+        if (!response.didSucceed()) {
+            response.showErrorToast(this);
+            changeState(STATE_EDITING);
+        }
+        _displayNameText.setError(response.getPropertyError("displayName"));
+        _emailText.setError(response.getPropertyError("email"));
     }
 
     @Override
@@ -248,11 +293,11 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             int itemId = item.getItemId();
             if (itemId == R.id.activity_profile_edit_menuDone) {
-                // TODO Send request to update display name and email
-                User user = application.getAuth().getUser();
-                user.setDisplayName(_displayNameText.getText().toString());
-                user.setEmail(_emailText.getText().toString());
+                setProgressBarVisible(true);
                 changeState(STATE_VIEWING);
+                bus.post(new Account.UpdateProfileRequest(
+                        _displayNameText.getText().toString(),
+                        _emailText.getText().toString()));
                 return true;
             }
             return false;

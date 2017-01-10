@@ -21,5 +21,8 @@
     <string name="ChangePasswordDialogConfirm_new_password">确认新密码</string>
     <string name="ChangePasswordDialogPasswordUpdated">密码已经更新</string>
 
+    <string name="ServiceResponseShowErrorToast">未知错误</string>
+
+
 
 </resources>
