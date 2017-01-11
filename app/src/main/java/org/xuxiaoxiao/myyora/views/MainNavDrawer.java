@@ -5,6 +5,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import org.xuxiaoxiao.myyora.R;
 import org.xuxiaoxiao.myyora.activities.BaseActivity;
 import org.xuxiaoxiao.myyora.activities.ContactsActivity;
@@ -12,6 +14,7 @@ import org.xuxiaoxiao.myyora.activities.MainActivity;
 import org.xuxiaoxiao.myyora.activities.ProfileActivity;
 import org.xuxiaoxiao.myyora.activities.SentMessagesActivity;
 import org.xuxiaoxiao.myyora.infrastructure.User;
+import org.xuxiaoxiao.myyora.services.Account;
 
 /**
  * Created by WuQiang on 2017/1/6.
@@ -44,5 +47,10 @@ public class MainNavDrawer extends NavDrawer {
         // 这个文字可以在 LoginFragment 当中的 onClick 当中设置
 
         // TODO: change avatar image to avatarUrl from loggedInUser
+    }
+    @Subscribe
+    public void UserDetailsUpdated(Account.UserDetailsUpdatedEvent event){
+        // TODO update avatar URL
+        _displayNameText.setText(event.User.getDisplayName());
     }
 }

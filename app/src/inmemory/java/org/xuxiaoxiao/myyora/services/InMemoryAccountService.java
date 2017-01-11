@@ -35,8 +35,10 @@ public class InMemoryAccountService extends BaseInMemoryService {
                 User user = application.getAuth().getUser();
                 user.setDisplayName(request.DisplayName);
                 user.setEmail(request.Email);
-
+// 去往 ProfileActivity 当中的     public void onProfileUpdated(Account.UpdateProfileResponse response) {
                 bus.post(response);
+                // 去往 MainNavDrawer 当中的 public void UserDetailsUpdated(Account.UserDetailsUpdatedEvent event)
+  //  ProfileActivity 当中的   public void UserDetailsUpdated(Account.UserDetailsUpdatedEvent event)
                 bus.post(new Account.UserDetailsUpdatedEvent(user));
             }
         }, 2000, 3000);
@@ -79,10 +81,10 @@ public void updateAvatar(final Account.ChangeAvatarRequest request) {
             public void run() {
                 Account.LoginWithUserNameResponse response = new Account.LoginWithUserNameResponse();
 
-                if (request.UserName.equals("dariush"))
+                if (request.UserName.equals("wuqiang2"))
                     response.setPropertyError("userName", "Invalid username or password");
 
-                loginUser(response);
+                loginUser(response);//就在本 Activity 当中
                 bus.post(response);
             }
         }, 1000, 2000);
@@ -91,16 +93,16 @@ public void updateAvatar(final Account.ChangeAvatarRequest request) {
         Auth auth = application.getAuth();
         User user = auth.getUser();
 
-        user.setDisplayName("Dariush Lotfi");
-        user.setUserName("dlotif");
-        user.setEmail("me@dlotfi.ir");
+        user.setDisplayName("武强DisplayName");
+        user.setUserName("武强UserName");
+        user.setEmail("wuqiang@gmail.com");
         user.setAvatarUrl("http://www.gravatar.com/avatar/1?d=identicon");
         user.setLoggedIn(true);
         user.setId(123);
         bus.post(new Account.UserDetailsUpdatedEvent(user));
 
         auth.setAuthToken("fakeauthtoken");
-
+//下面的 response.DisplayName 等，都仅仅是一个接受类
         response.DisplayName = user.getDisplayName();
         response.UserName = user.getUserName();
         response.Email = user.getEmail();

@@ -121,6 +121,10 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
         }
         isProgressBarVisible = visible;
     }
+    @Subscribe
+    public void UserDetailsUpdated(Account.UserDetailsUpdatedEvent event){
+        getSupportActionBar().setTitle(event.User.getDisplayName());
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -211,7 +215,7 @@ public class ProfileActivity extends BaseAuthenticatedActivity implements View.O
 //        _avatarView.setImageResource(0); // Force ImageView to refresh image despite its Uri not changed
 //        _avatarView.setImageURI(Uri.fromFile(_tempOutputFile));
     }
-    @Subscribe // 更新_displayNameText与邮箱
+    @Subscribe // 更新 Profile   ， _displayNameText与邮箱
     public void onProfileUpdated(Account.UpdateProfileResponse response) {
         if (!response.didSucceed()) {
             response.showErrorToast(this);

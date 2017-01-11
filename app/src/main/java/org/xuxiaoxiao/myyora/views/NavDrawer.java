@@ -45,6 +45,7 @@ public class NavDrawer {
                 setOpen(!isOpen());
             }
         });
+        activity.getYoraApplication().getBus().register(this);
     }
     public boolean isOpen() {
         return drawerLayout.isDrawerOpen(GravityCompat.START);
@@ -55,6 +56,9 @@ public class NavDrawer {
         } else {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
+    }
+    public void destroy() {
+        activity.getYoraApplication().getBus().unregister(this);
     }
     public  void addItem(NavDrawerItem item) {
         items.add(item);
