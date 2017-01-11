@@ -110,6 +110,7 @@ public final class Account {
     public static class ChangeAvatarResponse extends ServiceResponse {
 
     }
+    /*********************************************************************************************/
 
     public static class UpdateProfileRequest {
         public String DisplayName;
@@ -123,6 +124,7 @@ public final class Account {
 
     public static class UpdateProfileResponse extends ServiceResponse {
     }
+    /*********************************************************************************************/
 
     public static class ChangePasswordRequest {
         public String CurrentPassword;
