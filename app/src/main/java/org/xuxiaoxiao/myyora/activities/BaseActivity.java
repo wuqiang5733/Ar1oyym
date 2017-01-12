@@ -22,6 +22,8 @@ import org.xuxiaoxiao.myyora.views.NavDrawer;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+    private boolean _isRegisteredWithBus;
+
     protected YoraApplication application;
     protected Toolbar toolbar;
     protected NavDrawer navDrawer;
@@ -43,6 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         isTablet = (metrics.widthPixels / metrics.density) >= 600;
 
         bus.register(this);
+        _isRegisteredWithBus = true;
     }
     public ActionScheduler getScheduler() {
         return scheduler;
@@ -62,9 +65,25 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        bus.unregister(this);
+        if (_isRegisteredWithBus) {
+            bus.unregister(this);
+            _isRegisteredWithBus = true;
+        }
         if (navDrawer != null)
-        navDrawer.destroy(); // 这是OTTO bus 的
+            navDrawer.destroy();// 这是OTTO bus 的
+    }
+
+    @Override
+    public void finish() {// finish() 这个方法一般来说是一定会执行的 。
+        super.finish();
+
+        // onDestroy might not be called after the activity is finished, so this ensures
+        // immediate unregistering from the bus and prevents unwanted issues.
+        // It seems that "finish" is also called internally by the system in most scenarios
+        if (_isRegisteredWithBus) {
+            bus.unregister(this);
+            _isRegisteredWithBus = true;
+        }
     }
 
     @Override
