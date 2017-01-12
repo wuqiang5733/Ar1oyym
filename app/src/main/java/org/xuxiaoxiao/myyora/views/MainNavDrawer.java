@@ -3,7 +3,6 @@ package org.xuxiaoxiao.myyora.views;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -34,7 +33,8 @@ public class MainNavDrawer extends NavDrawer {
         addItem(new BasicNavDrawerItem(activity.getString(R.string.ActivityLogout).toString(), null, R.drawable.ic_action_backspace, R.id.include_main_nav_drawer_bottomItems) {
             @Override
             public void onClick(View v) {
-                Toast.makeText(activity, activity.getString(R.string.LotoutTip), Toast.LENGTH_SHORT).show();
+                activity.getYoraApplication().getAuth().logout();
+                navDrawer.setOpen(false);
             }
         });
 
