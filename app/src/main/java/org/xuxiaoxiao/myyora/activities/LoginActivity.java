@@ -100,6 +100,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Subscribe // 这个是我自己改的，因为 onAttach 不执行
+    // TMD 这个Git...
     public void casual(Account.myinterface wuqiang) {
         finishLogin();
     }
