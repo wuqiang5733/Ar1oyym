@@ -67,7 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         if (_isRegisteredWithBus) {
             bus.unregister(this);
-            _isRegisteredWithBus = true;
+            _isRegisteredWithBus = false;
         }
         if (navDrawer != null)
             navDrawer.destroy();// 这是OTTO bus 的
@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         // It seems that "finish" is also called internally by the system in most scenarios
         if (_isRegisteredWithBus) {
             bus.unregister(this);
-            _isRegisteredWithBus = true;
+            _isRegisteredWithBus = false;
         }
     }
 

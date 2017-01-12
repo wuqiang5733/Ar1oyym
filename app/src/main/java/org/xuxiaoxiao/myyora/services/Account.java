@@ -148,4 +148,9 @@ public final class Account {
             User = user;
         }
     }
+    /*******************************************************************************/
+    public static class myinterface {
+
+    }
+
 }

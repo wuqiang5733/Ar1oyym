@@ -27,13 +27,13 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // 第三个参数：false 是 attachToRoot ，好像已经自动 attach 了，如果你再 attach 一次就会报错
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        _loginButton = (Button)view.findViewById(R.id.fragment_login_loginButton);
+        _loginButton = (Button) view.findViewById(R.id.fragment_login_loginButton);
         _loginButton.setOnClickListener(this);
 
         _defaultLoginButtonText = _loginButton.getText().toString();
         _userNameText = (EditText) view.findViewById(R.id.fragment_login_userName);
         _passwordText = (EditText) view.findViewById(R.id.fragment_login_password);
-        _progressBar =  view.findViewById(R.id.activity_login_progressBar);
+        _progressBar = view.findViewById(R.id.activity_login_progressBar);
         _progressBar.setVisibility(View.GONE);
 
         return view;
@@ -54,6 +54,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
         }
     }
+
     @Subscribe
     public void onLoginWithUserName(Account.LoginWithUserNameResponse response) {
         _progressBar.setVisibility(View.GONE);
@@ -67,12 +68,13 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         _passwordText.setError(response.getPropertyError("password"));
 
         if (response.didSucceed())
-            _callbacks.onLoggedIn();
+//            _callbacks.onLoggedIn();
+            bus.post(new Account.myinterface());  // 这个是我自己改的，因为 onAttach 不执行
     }
 
     @Override
     //import android.app.Fragment;  // 调用这个版本 onAttach 不执行，可能是25就不行了
-    public void onAttach(Context context) {
+    public void onAttach(Context context) {  // 这个不知道为什么不执行
         super.onAttach(context);
         _callbacks = (Callbacks) getActivity();
     }

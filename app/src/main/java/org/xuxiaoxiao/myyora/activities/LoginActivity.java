@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.squareup.otto.Subscribe;
+
 import org.xuxiaoxiao.myyora.R;
 import org.xuxiaoxiao.myyora.fragments.LoginFragment;
+import org.xuxiaoxiao.myyora.services.Account;
 
 /*
 E/YoraApplication: YoraApplication
@@ -93,6 +96,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     // 这个是在 LoginFragment 当中触发的
     public void onLoggedIn() {
+        finishLogin();
+    }
+
+    @Subscribe // 这个是我自己改的，因为 onAttach 不执行
+    public void casual(Account.myinterface wuqiang) {
         finishLogin();
     }
 }

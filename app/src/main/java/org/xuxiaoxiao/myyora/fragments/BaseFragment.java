@@ -1,15 +1,15 @@
 package org.xuxiaoxiao.myyora.fragments;
 
-//import android.app.Fragment;  // 调用这个版本 onAttach 不执行
-
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
 
 import org.xuxiaoxiao.myyora.infrastructure.ActionScheduler;
 import org.xuxiaoxiao.myyora.infrastructure.YoraApplication;
+
+//import android.support.v4.app.Fragment;
 
 public abstract class BaseFragment extends Fragment {
     protected YoraApplication application;
