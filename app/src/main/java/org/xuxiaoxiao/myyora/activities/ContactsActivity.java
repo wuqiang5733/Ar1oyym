@@ -63,9 +63,12 @@ public class ContactsActivity extends BaseAuthenticatedActivity implements Adapt
 
         Fragment fragment;
         try {
+<<<<<<< HEAD
 //            Log.d("Test",item.toString());
 //            Log.d("Test",item.getClass().toString());
 //            Log.d("getFragmetn",item.getFragment().toString());
+=======
+>>>>>>> 2fbb908... Video60BusBug
             fragment = (Fragment) item.getFragment().newInstance();
         }
         catch (Exception e) {
