@@ -13,6 +13,7 @@ import android.view.View;
 import com.squareup.otto.Bus;
 
 import org.xuxiaoxiao.myyora.R;
+import org.xuxiaoxiao.myyora.infrastructure.ActionScheduler;
 import org.xuxiaoxiao.myyora.infrastructure.YoraApplication;
 import org.xuxiaoxiao.myyora.views.NavDrawer;
 
@@ -26,6 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected NavDrawer navDrawer;
     protected boolean isTablet;
     protected Bus bus;
+    protected ActionScheduler scheduler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +37,26 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.application = (YoraApplication) getApplication();
         bus = application.getBus();
+        scheduler = new ActionScheduler(application);
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         isTablet = (metrics.widthPixels / metrics.density) >= 600;
 
         bus.register(this);
+    }
+    public ActionScheduler getScheduler() {
+        return scheduler;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        scheduler.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scheduler.onPause();
     }
 
     @Override
